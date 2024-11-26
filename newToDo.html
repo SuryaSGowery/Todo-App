@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title> To Do </title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+
+<body>
+    <div class="container mt-2" style="width: 40%;"> <!-- Corrected width to be inline style -->
+        <div class="card">
+            <div class="card-header text-center">
+                <h1> To Do App</h1>
+            </div>
+
+            <div class="card-body">
+                <form class="d-flex" id="taskForm">
+                    <input type="text" class="form-control" placeholder="Enter your task" id="newTask">
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-plus-circle"></i>
+                    </button>
+                </form>
+            </div>
+
+            <div id="taskContainer">
+                <!-- delete icon moved to taskList footer -->
+            </div>
+
+            <div class="card-footer">
+                <h3>Tasks</h3>
+                <ul id="taskList" type="none">
+                </ul>
+                <i id="deleteIcon" class="bi bi-trash3" style="cursor: pointer;"></i> <!-- Delete icon moved here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const newTask = document.getElementById("newTask");
+        const taskForm = document.getElementById("taskForm");
+        const taskList = document.getElementById("taskList");
+        const deleteIcon = document.getElementById("deleteIcon");
+
+        // Event Listener for the form
+        taskForm.addEventListener("submit", handleSubmit);
+
+        // Event Listener for delete all tasks (outside handleSubmit)
+        deleteIcon.addEventListener("click", handleDeleteAll);
+
+        // Function to handle form submission
+        function handleSubmit(event) {
+            event.preventDefault();
+            if (newTask.value.trim() === '') {
+                alert("Task cannot be empty!");
+                return;
+            }
+
+            // Create a task group container
+            const newTaskGroup = document.createElement("div");
+            newTaskGroup.setAttribute("class", "btn-group mb-2 w-100");
+
+            // Done button
+            const donebtn = document.createElement("button");
+            donebtn.setAttribute("class", "btn btn-success col-1");
+            const donebtnIcon = document.createElement("i");
+            donebtnIcon.setAttribute("class", "bi bi-check2-circle");
+            donebtn.appendChild(donebtnIcon);
+            donebtn.addEventListener("click", handleDone);
+
+            // Task button (displays the task)
+            const taskButton = document.createElement("button");
+            taskButton.setAttribute("class", "btn btn-light col-9");
+            taskButton.textContent = newTask.value;
+
+            // Post button
+            const postbtn = document.createElement("button");
+            postbtn.setAttribute("class", "btn btn-warning col-1");
+            const postbtnIcon = document.createElement("i");
+            postbtnIcon.setAttribute("class", "bi bi-hourglass-top");
+            postbtn.appendChild(postbtnIcon);
+            postbtn.addEventListener("click", () => handlePost(taskButton));
+
+            // Delete button for individual task
+            const deletebtn = document.createElement("button");
+            deletebtn.setAttribute("class", "btn btn-danger col-1");
+            const deletebtnIcon = document.createElement("i");
+            deletebtnIcon.setAttribute("class", "bi bi-x-circle");
+            deletebtn.appendChild(deletebtnIcon);
+            deletebtn.addEventListener("click", () => handleDeleteTask(newTaskGroup));
+
+            // Append buttons to task group
+            newTaskGroup.appendChild(donebtn);
+            newTaskGroup.appendChild(taskButton);
+            newTaskGroup.appendChild(postbtn);
+            newTaskGroup.appendChild(deletebtn);
+
+            // Append task group to the task list
+            taskList.appendChild(newTaskGroup);
+
+            // Clear the input field
+            newTask.value = '';
+        }
+
+        // Function to mark a task as done
+        function handleDone() {
+            this.nextElementSibling.setAttribute("class", "btn btn-outline-success col-9");
+        }
+
+        // Function to mark a task as in progress
+        function handlePost(taskButton) {
+            taskButton.setAttribute("class", "btn btn-outline-warning col-9");
+        }
+
+        // Function to delete a specific task
+        function handleDeleteTask(taskGroup) {
+            const didUserConfirm = confirm("Do you want to delete this task?");
+            if (didUserConfirm) {
+                setTimeout(() => {
+                    taskGroup.remove();
+                }, 2000);
+            }
+        }
+
+        // Function to delete all tasks
+        function handleDeleteAll() {
+            const didUserConfirm = confirm("Do you want to delete all tasks?");
+            if (didUserConfirm) {
+                taskList.innerHTML = ""; // This will clear all tasks
+            }
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+
+</html>
